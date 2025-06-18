@@ -1,0 +1,764 @@
+<html>
+  <head>
+    <title>Javaコーディング規約</title>
+    <style>
+        html,body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            box-sizing: border-box;
+            scroll-padding-top: 45px;
+        }
+
+        body {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            grid-template-rows: auto 1fr;
+            grid-template-areas: 'navigation main-container';
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        /*=========================================*/
+        /* 左側                                    */
+        /*=========================================*/
+        .navigation {
+            grid-area: navigation;
+            height: 100%;
+            background-color: #f9f9f9;
+            border-right: 2px solid #ccc;
+        }
+
+        .navigation h3 {
+            height: 25px;
+            background-color: #5591cc;
+            color: #ffffff;
+            margin: 0;
+            padding: 10px;
+            font-size: initial;
+            cursor: pointer;
+        }
+
+        .navigation h3:hover {
+            opacity: 0.7;
+        }
+
+        .navigation > div {
+            height: calc(100vh - 65px);
+            padding: 10px;
+            overflow-y: scroll;
+        }
+
+        .naviGroup {
+            margin-bottom: 25px;
+        }
+
+        .navigation a:visited {
+            color: #0000FF; /* 訪問済みのリンクの色をそのまま維持 */
+        }
+
+        .naviItem {
+            margin: 10px 0;
+            cursor: pointer;
+        }
+
+        .naviItem.selected {
+            background-color: #aaaaee;
+        }
+
+        .naviItem:not(.selected):hover {
+            background-color: #bbbbff;
+        }
+
+        .naviItem:not(.selected):hover a {
+            color: #ffffff;
+        }
+
+        .naviItem.selected {
+        }
+
+        .naviItem.selected a {
+            color: #ffffff;
+        }
+
+        .naviLink {
+            text-decoration: none;
+        }
+
+        .naviLink:before {
+            content: '📁 ';
+        }
+
+        .naviLink.sub {
+            margin-left: 10px;
+            font-size: small;
+        }
+
+        .naviLink.sub:before {
+            content: ' 　 ';
+        }
+
+        /*=========================================*/
+        /* 右側                                    */
+        /*=========================================*/
+        #tipsContainer {
+            grid-area: main-container;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        #searchWrapper {
+            display: flex;
+            height: 45px;
+            line-height: 45px;
+            align-items: center;
+            padding-left: 20px;
+            box-sizing: border-box;
+        }
+
+        #searchWrapper:before {
+            content: '🔍';
+            position: absolute;
+            left: 372px;
+        }
+
+        #tipsContent {
+            height: calc(100% - 45px);;
+            width: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-y: auto;
+        }
+
+        .section {
+            margin-bottom: 20px;
+        }
+
+        .datalist {
+            margin-left: 20px;
+        }
+
+        .data {
+            border: 1px #000000 dashed;
+            font-size: small;
+            margin: 0 20px 25px 40px;
+            padding: 10px 5px;
+        }
+
+        .data pre {
+            display: inline-block;
+        }
+
+        .data div.subtitle {
+            font-weight: bold;
+            margin: 15px 0 5px;
+        }
+
+        .data div.reference {
+            background-color: #eeeeff;
+            margin: 10px 10px 0;
+            padding: 2px 10px;
+            white-space: pre;
+        }
+
+        .data div.reference + div.reference {
+            margin-top: 0;
+        }
+
+        .data div.reference > div + div,
+        .data div.reference + div:not(.reference) {
+            margin-top: 8px;
+        }
+
+        .data div.example,
+        .data div.explain {
+            margin: 10px;
+            padding: 2px 10px;
+            white-space: pre;
+        }
+
+        .data div.code-head {
+            display: flex;
+            background-color: #dddde9;
+            border: 1px solid #000044;
+            margin: 10px 30px 0;
+            padding: 2px;
+        }
+
+        .data div.code-head:before {
+            content: '📝 code';
+            color: #555577;
+            padding-left: 5px;
+        }
+
+        .data div.code-head button.code-copy {
+            display: block;
+            height: 25px;
+            width: 120px;
+            background-color: #7799bb;
+            border: 1px solid #000000;
+            color: white;
+            margin-left: auto;
+            cursor: pointer;
+        }
+
+        .data div.code-head button:hover {
+            opacity: 0.7;
+        }
+
+        .data div.code {
+            line-height: 25px;
+            background-color: #000044;
+            color: #ffffff;
+            margin: 0 30px;
+            padding: 2px 10px;
+            white-space: pre;
+        }
+
+        .data div.code > div + div {
+            margin-top: 0;
+            border-top: 1px #555599 dashed;
+        }
+
+        .data div.code + div:not(.code) {
+            margin-top: 20px;
+        }
+
+        .code {
+            font-family: monospace;
+            font-size: medium;
+            margin: 0 5px;
+        }
+
+        .data div.diagram {
+            line-height: 25px;
+            border: 1px solid #999999;
+            border-radius: 6px;
+            margin: 10px 30px 0;
+            padding: 2px 10px;
+            white-space: pre;
+            font-size: initial;
+            font-family: monospace;
+            font-weight: bold;
+        }
+
+        .data div.diagram > div {
+            line-height: 17px;
+            margin: 0 50px;
+        }
+
+        .data div.checkstyle {
+            width: 65px;
+            background-color: #e49edd;
+            border-radius: 7px;
+            color: #ffffff;
+            font-size: smaller;
+            padding: 0 8px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .category {
+            background-color: #5591cc;
+            color: white;
+            font-weight: bold;
+            padding-left: 10px;
+        }
+
+        .title {
+            color: #5591cc;
+            font-size: small;
+            font-weight: bold;
+            margin: 15px 0 10px 15px;
+        }
+
+        .title a.permalink {
+            text-decoration: none;
+            margin-left: 8px;
+            font-size: 0.9em;
+            opacity: 0.6;
+        }
+
+        .title a.permalink:hover {
+            opacity: 1;
+        }
+
+        .highlight {
+            background-color: yellow;
+            color: black;
+        }
+
+        .highlight-current {
+            background-color: orange;
+            color: black;
+        }
+
+        #filter {
+            height: 30px;
+            width: 300px;
+            border: 1px solid #000000;
+            padding: 5px 0 5px 30px;
+        }
+
+        .next {
+            line-height: 20px;
+            padding: 4px 10px;
+            background-color: #ffffff;
+            border: 1px solid #000000;
+            border-width: 1px 1px 1px 0;
+            cursor: pointer;
+        }
+
+        .next:disabled,
+        .reset:disabled {
+            background-color: #ccccdd;
+            color: white;
+        }
+
+        .reset {
+            line-height: 20px;
+            padding: 4px 10px;
+            background-color: #8888aa;
+            border: 1px solid #000000;
+            border-width: 1px 1px 1px 0;
+            color: white;
+            cursor: pointer;
+        }
+
+        .next:not(:disabled):hover,
+        .reset:not(:disabled):hover {
+            opacity: 0.7;
+        }
+    </style>
+  </head>
+  <body>
+    <div class="navigation">
+        <h3 id="allview"><span class="allview-icon">📚</span> Javaコーディング規約</h3>
+        <div id="naviList"></div>
+    </div>
+
+    <div id="tipsContainer">
+        <div id="searchWrapper">
+            <input type="text" id="filter" placeholder="検索..." />
+            <button type="button" id="next" class="next" title="次の検索結果へ" disabled>▼</button>
+            <button type="button" id="reset" class="reset" title="検索をリセット" disabled>✖</button>
+        </div>
+        <div id="tipsContent"></div>
+    </div>
+
+    <script src="./standard_data.js"></script>
+    <script>
+        const allview = document.getElementById('allview');
+        const naviList = document.getElementById('naviList');
+        const tipsContent = document.getElementById('tipsContent');
+        const filter = document.getElementById('filter');
+        const next = document.getElementById('next');
+        const reset = document.getElementById('reset');
+
+        // 目次作成（category と title を表示）
+        tips.forEach((tip, index) => {
+            const naviGroup = document.createElement('div');
+            naviGroup.classList.add('naviGroup');
+
+            const categoryItem = document.createElement('div');
+            categoryItem.classList.add('naviItem');
+            categoryItem.innerHTML = `<a href="#section${index}" class="naviLink">${index}.&nbsp;&nbsp;${tip.category}</a>`;
+            naviGroup.appendChild(categoryItem);
+
+            // titleも目次に追加
+            tip.datalist.forEach((tipdata, subindex) => {
+                const titleItem = document.createElement('div');
+                titleItem.classList.add('naviItem');
+                titleItem.innerHTML = `<a href="#section${index}-${subindex + 1}" class="naviLink sub">${index}.${subindex + 1}.&nbsp;&nbsp;${tipdata.title}</a>`;
+                naviGroup.appendChild(titleItem);
+            });
+
+            naviList.appendChild(naviGroup);
+
+            // セクション作成
+            const section = document.createElement('div');
+            section.id = `section${index}`;
+            section.classList.add('section');
+
+            const categoryElement = document.createElement('div');
+            categoryElement.classList.add('category');
+            categoryElement.innerHTML = `${index}.&nbsp;&nbsp;${tip.category}`;
+            section.appendChild(categoryElement);
+
+            // titleとdataを追加
+            tip.datalist.forEach((tipdata, subindex) => {
+                const titleElement = document.createElement('div');
+                titleElement.classList.add('title');
+                titleElement.id = `section${index}-${subindex + 1}`;
+                titleElement.innerHTML = `${index}.${subindex + 1}.&nbsp;&nbsp;${tipdata.title}`;
+
+                const anchor = document.createElement('a');
+                anchor.href = `#${titleElement.id}`;
+                anchor.textContent = ' 🔗';
+                anchor.classList.add('permalink');
+                titleElement.appendChild(anchor);
+
+                section.appendChild(titleElement);
+
+                const dataElement = document.createElement('div');
+                dataElement.classList.add('data');
+
+                if (tipdata.mark) {
+                    const markElement = document.createElement('div');
+                    markElement.classList.add(tipdata.mark);
+                    markElement.textContent = tipdata.mark;
+                    dataElement.appendChild(markElement);
+                }
+
+                const lineArray = Array.isArray(tipdata.data) ? tipdata.data : new Array(tipdata.data);
+                lineArray.forEach(line => {
+                    const lineElement = document.createElement('div');
+
+                    if (line.code || line.reference || line.explain || line.diagram) {
+                        const subClass = Object.keys(line)[0];
+                        lineElement.classList.add(subClass);
+
+                        /* コーディング規約でコードコピーは不要
+                        if (subClass == 'code') {
+                            const headElement = document.createElement('div');
+                            headElement.classList.add('code-head');
+
+                            const copyElement = document.createElement('button');
+                            copyElement.classList.add('code-copy');
+                            copyElement.innerHTML = '⧉ コピーする';
+                            headElement.appendChild(copyElement);
+                            dataElement.appendChild(headElement);
+                        }*/
+
+                        line[subClass].forEach(subLine => {
+                            const subElement = document.createElement('div');
+                            if (subLine.length > 3 && subLine.substring(1,2) == '|') {
+                                const mode = subLine.substring(0,1);
+                                switch (mode) {
+                                case 'h': subElement.classList.add('subtitle');  break;
+                                }
+                                subElement.innerHTML = subLine.substring(2);
+                            } else {
+                                subElement.innerHTML = subLine;
+                            }
+                            lineElement.appendChild(subElement);
+                        });
+
+                    } else if (line.length > 3 && line.substring(1,2) == '|') {
+                        const mode = line.substring(0,1);
+                        switch (mode) {
+                        case 'h': lineElement.classList.add('subtitle');  break;
+                        case 'e': lineElement.classList.add('example');   break;
+                        case 'r': lineElement.classList.add('reference'); break;
+                        case 'c': lineElement.classList.add('code');      break;
+                        }
+                        lineElement.innerHTML = line.substring(2);
+
+                    } else {
+                        lineElement.innerHTML = line;
+                    }
+                    dataElement.appendChild(lineElement);
+                });
+                section.appendChild(dataElement);
+            });
+
+            tipsContent.appendChild(section);
+        });
+
+        // 目次リンククリックで該当セクションにスクロール
+        document.querySelectorAll('.naviItem').forEach(naviItem => {
+            naviItem.addEventListener('click', function(event) {
+                reset.click();
+                event.preventDefault();
+                const targetId = this.getElementsByClassName('naviLink')[0].getAttribute('href').substring(1); // #sectionX または #sectionX-Y
+                location.hash = targetId;
+
+                const targetSection = document.getElementById(targetId);
+
+                const beforeSelect = document.getElementsByClassName('selected');
+                if (beforeSelect.length) {
+                    beforeSelect[0].classList.remove('selected');
+                }
+                this.classList.add('selected');
+
+                // すべてのセクションを非表示にする
+                const allSections = document.getElementsByClassName('section');
+                Array.from(allSections).forEach(section => {
+                    section.style.display = 'none';
+                });
+
+                // セクションの場合
+                if (targetSection.classList.contains('section')) {
+                    // クリックしたセクションのみ表示
+                    targetSection.style.display = 'block';
+                    targetSection.getElementsByClassName('category')[0].style.display = 'block';
+                    const titles = targetSection.getElementsByClassName('title');
+                    Array.from(titles).forEach(titleElement => {
+                        titleElement.style.display = 'block';
+                        titleElement.nextElementSibling.style.display = 'block';
+                    });
+                }
+
+                // タイトルの場合
+                if (targetSection.classList.contains('title')) {
+                    // すべてのカテゴリを非表示にする
+                    const allCategories = document.getElementsByClassName('category');
+                    Array.from(allCategories).forEach(category => {
+                        category.style.display = 'none';
+                    });
+
+                    // すべてのタイトルを非表示にする
+                    const allTitles = document.getElementsByClassName('title');
+                    Array.from(allTitles).forEach(title => {
+                        title.style.display = 'none';
+                        title.nextElementSibling.style.display = 'none';
+                    });
+
+                    // クリックしたセクションとその上位のみ表示
+                    targetSection.style.display = 'block';
+                    targetSection.closest('.section').style.display = 'block';
+                    targetSection.closest('.section').getElementsByClassName('category')[0].style.display = 'block';
+                    targetSection.nextElementSibling.style.display = 'block';
+                }
+            });
+        });
+
+        // Tips本文内のクリックイベント
+        tipsContent.addEventListener('click', function(event) {
+            if (event.target) {
+                if (event.target.classList.contains('code-copy')) {
+                    // コピー
+                    const codeElements = event.target.closest('div').nextElementSibling;
+                    let copyText = '';
+                    Array.from(codeElements.children).forEach(codeElement => {
+                        copyText += codeElement.innerText + '\n';
+                    });
+                    if (navigator.clipboard) {
+                        navigator.clipboard.writeText(copyText).then(() => {
+                            const originalText = event.target.textContent;
+                            event.target.textContent = "✔Copied!";
+                            setTimeout(() => {
+                                event.target.textContent = originalText;
+                            }, 1500);
+                        }).catch(err => {
+                          alert('コピーに失敗しました…');
+                        });
+                    } else {
+                        const copyElement = document.createElement('textarea');
+                        copyElement.value = copyText;
+                        document.body.appendChild(copyElement);
+                        copyElement.select();
+                        document.execCommand('copy');
+                        document.body.removeChild(copyElement);
+
+                        const originalText = event.target.textContent;
+                        event.target.textContent = "Copied!";
+                        setTimeout(() => {
+                            event.target.textContent = originalText;
+                        }, 1500);
+                    }
+
+                } else if (event.target.classList.contains('permalink')) {
+                    // アンカー
+                    const hash = event.target.getAttribute('href');
+                    if (hash) {
+                        const naviLink = document.querySelector('a.naviLink[href="' + hash + '"]');
+                    console.log(naviLink);
+                        if (naviLink) {
+                            naviLink.click();
+                        }
+                    }
+                }
+            }
+        });
+
+        // 全表示
+        allview.addEventListener('click', function() {
+            location.hash = '';
+            const beforeSelect = document.getElementsByClassName('selected');
+            if (beforeSelect.length) {
+                beforeSelect[0].classList.remove('selected');
+            }
+            const allSections = document.getElementsByClassName('section');
+            Array.from(allSections).forEach(section => {
+                section.style.display = 'block';
+                section.getElementsByClassName('category')[0].style.display = 'block';
+
+                const titles = section.getElementsByClassName('title');
+
+                Array.from(titles).forEach(titleElement => {
+                    titleElement.style.display = 'block';
+                    titleElement.nextElementSibling.style.display = 'block';
+                });
+            });
+            reset.click();
+        });
+
+        // 検索機能
+        filter.addEventListener('input', function() {
+            const keyword = filter.value.toLowerCase();
+
+            // 検索結果のハイライトを表示位置を解除（ハイライトを解除できなくなるので先に解除する）
+            Array.from(document.getElementsByClassName('highlight-current')).forEach(current => {
+                current.classList.remove('highlight-current');
+            });
+
+            // 検索結果のハイライトを解除
+            const allDivs = document.getElementById('tipsContent').querySelectorAll('div');
+            const tipDivs = Array.from(allDivs).filter(tipDiv => !tipDiv.querySelector('div'));
+            Array.from(tipDivs).forEach(tipDiv => {
+                tipDiv.innerHTML = tipDiv.innerHTML.replace(/<span class="highlight">(.*?)<\/span>/g, '$1');
+            });
+
+            next.disabled = true;
+            reset.disabled = true;
+
+            // キーワードなしで、目次絞り込みされていたら、対象を全表示
+            const beforeSelect = document.getElementsByClassName('selected');
+            if (keyword == '' && beforeSelect.length > 0) {
+                beforeSelect[0].getElementsByClassName('naviLink')[0].click();
+                return false;
+            }
+
+            // 検索結果をハイライト
+            if (keyword != '') {
+                const regex = new RegExp(`(${keyword})`, 'gi');
+                Array.from(tipDivs).forEach(tipDiv => {
+                    const walker = document.createTreeWalker(tipDiv, NodeFilter.SHOW_TEXT, null, false);
+                    const textNodes = [];
+
+                    while (walker.nextNode()) {
+                        textNodes.push(walker.currentNode);
+                    }
+
+                    textNodes.forEach(textNode => {
+                        const parent = textNode.parentNode;
+                        if (textNode.nodeValue.toLowerCase().includes(keyword.toLowerCase())) {
+                            const frag = document.createDocumentFragment();
+                            const parts = textNode.nodeValue.split(regex);
+
+                            parts.forEach(part => {
+                                if (part.toLowerCase() === keyword.toLowerCase()) {
+                                    const span = document.createElement('span');
+                                    span.className = 'highlight';
+                                    span.textContent = part;
+                                    frag.appendChild(span);
+                                } else {
+                                    frag.appendChild(document.createTextNode(part));
+                                }
+                            });
+
+                            parent.replaceChild(frag, textNode);
+                        }
+                    });
+                });
+
+                const highlights = document.getElementsByClassName('highlight');
+                if (highlights.length) {
+                    next.disabled = false;
+                    reset.disabled = false;
+                    highlights[0].classList.add('highlight-current');
+
+                    const scrollContainer = document.querySelector('#tipsContent');
+                    const scrollTarget = highlights[0];
+                    tipsContent.scrollTo({
+                        top: scrollTarget.offsetTop - 60,
+                        behavior: "smooth"
+                    });
+                }
+            }
+
+            // 各セクションの表示/非表示を制御
+            const sections = tipsContent.getElementsByClassName('section');
+            Array.from(sections).forEach(section => {
+                const titles = section.getElementsByClassName('title');
+
+                Array.from(titles).forEach(titleElement => {
+                    const title = titleElement.textContent.toLowerCase();
+                    const dataElement = titleElement.nextElementSibling;
+                    const data = dataElement.textContent.toLowerCase();
+
+                    if (title.includes(keyword) || data.includes(keyword)) {
+                        titleElement.style.display = 'block';
+                        dataElement.style.display = 'block';
+
+                    } else {
+                        titleElement.style.display = 'none';
+                        dataElement.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // 検索機能Enter
+        filter.addEventListener('keydown', function (event) {
+            if (event.key === 'Enter') {
+                next.click();
+            }
+        });
+
+        // ▼ボタン
+        next.addEventListener('click', function() {
+            const highlights = Array.from(document.getElementsByClassName('highlight')).filter(highlight => highlight.offsetParent !== null);
+            const current = document.getElementsByClassName('highlight-current')[0];
+
+            let selectIndex = 0;
+            for (let i = 0; i < highlights.length; i++) {
+                if (highlights[i] == current) {
+                    selectIndex = i;
+                }
+            }
+
+            current.classList.remove('highlight-current');
+
+            if (highlights.length > (selectIndex + 1)) {
+                highlights[selectIndex + 1].classList.add('highlight-current');
+            } else {
+                highlights[0].classList.add('highlight-current');
+            }
+
+            const scrollContainer = document.querySelector('#tipsContent');
+            const scrollTarget = document.getElementsByClassName('highlight-current')[0];
+            tipsContent.scrollTo({
+                top: scrollTarget.offsetTop - 60,
+                behavior: "smooth"
+            });
+        });
+
+        // リセットボタン
+        reset.addEventListener('click', function() {
+            filter.value = '';
+            filter.dispatchEvent(new Event('input'));
+
+            tipsContent.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+        });
+
+        // キーダウン
+        document.addEventListener('keydown', function(e) {
+            // Ctrl+F (または Cmd+F on Mac)
+            const isMac = navigator.platform.toUpperCase().indexOf('MAC') >= 0;
+            const ctrlOrCmd = isMac ? e.metaKey : e.ctrlKey;
+
+            if (ctrlOrCmd && e.key.toLowerCase() === 'f') {
+                e.preventDefault(); // ブラウザの検索を無効化
+                filter.focus();
+            }
+        });
+
+        // アクセス時にハッシュが付いていれば該当メニューのクリック
+        const hash = location.hash;
+        if (hash) {
+            const naviLink = document.querySelector('a.naviLink[href="' + hash + '"]');
+            if (naviLink) {
+                naviLink.click();
+            }
+        }
+    </script>
+  </body>
+</html>
